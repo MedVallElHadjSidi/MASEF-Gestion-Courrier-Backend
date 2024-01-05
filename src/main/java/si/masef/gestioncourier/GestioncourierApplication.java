@@ -4,7 +4,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.Bean;
 import org.springframework.data.rest.core.config.RepositoryRestConfiguration;
+import org.springframework.web.client.RestTemplate;
 
 import si.masef.gestioncourier.entity.Courrier;
 
@@ -12,7 +14,6 @@ import si.masef.gestioncourier.entity.Courrier;
 public class GestioncourierApplication implements CommandLineRunner {
 	@Autowired
 	RepositoryRestConfiguration restConfig;
-  
 
 	public static void main(String[] args) {
 		SpringApplication.run(GestioncourierApplication.class, args);
@@ -24,5 +25,10 @@ public class GestioncourierApplication implements CommandLineRunner {
 		restConfig.exposeIdsFor(Courrier.class);
 
 	}
+
+	// @Bean
+	// public RestTemplate getRestTemplate() {
+	// 	return new RestTemplate();
+	// }
 
 }
