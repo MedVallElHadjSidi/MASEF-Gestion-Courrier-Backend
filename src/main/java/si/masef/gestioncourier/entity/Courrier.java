@@ -13,22 +13,26 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 
 
 @Entity
+@Table(uniqueConstraints = {@UniqueConstraint(columnNames = {"numberInscription", "destination"})})
 public class Courrier {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Long id;
     private String name;
-    @Column(unique = true,nullable = false)
+    @Column(nullable = false)
     private int numberInscription;
     private String nni;
     private String tel;
-    @Column(nullable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
+    @Column(nullable = true, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     @JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss")
     private Date date;
+    @Column(nullable = true)
     private String destination;
     private String nature;
     @JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss")

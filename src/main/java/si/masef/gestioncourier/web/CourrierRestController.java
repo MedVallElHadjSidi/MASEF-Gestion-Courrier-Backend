@@ -10,14 +10,19 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import si.masef.gestioncourier.entity.Courrier;
+import si.masef.gestioncourier.exceptions.ConflictException;
+import si.masef.gestioncourier.exceptions.ErrorResponse;
 import si.masef.gestioncourier.service.CourrierService;
 
-@CrossOrigin("*")
+// @CrossOrigin(origins="*")
 @RestController
 @RequestMapping("cr/")
+@CrossOrigin(origins = "*")
 public class CourrierRestController {
     @Autowired(required = true)
     private CourrierService courrierService;
@@ -32,6 +37,11 @@ public class CourrierRestController {
     public ResponseEntity<List<Courrier>> allCourriers() {
         List<Courrier> courriers = courrierService.AllCourriers();
         return new ResponseEntity<>(courriers, HttpStatus.OK);
+    }
+    @GetMapping("maxnumberinscription/{destination}")
+    public ResponseEntity<Integer> MaxNumberInscription(@PathVariable String destination) {
+        int maxnumberinscription = courrierService.findTopByOrderByDestinationDesc(destination);
+        return new ResponseEntity<>(maxnumberinscription, HttpStatus.OK);
     }
 
     @GetMapping("statistiques")
@@ -75,4 +85,16 @@ public class CourrierRestController {
         List<Courrier> courriers = courrierService.findByDestinationTelOrNniOrNumberInscription(destination,searchTerm);
         return new ResponseEntity<>(courriers, HttpStatus.OK);
     }
+
+    @PostMapping("/addCourrier")
+    public ResponseEntity<?>addCourrier(@RequestBody Courrier courrier) {
+        try {
+            Courrier savedCourrier = courrierService.SaveCourrier(courrier);
+            return new ResponseEntity<>(savedCourrier, HttpStatus.CREATED);
+        } catch (ConflictException e) {
+            ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
+            return new ResponseEntity<>(errorResponse, HttpStatus.CONFLICT);
+        }
+    }
+
 }
