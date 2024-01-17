@@ -29,8 +29,9 @@ public class Courrier {
     private int numberInscription;
     private String nni;
     private String tel;
-    @Column(nullable = true, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
+    @Column(nullable = true, updatable = false)
     @JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss")
+    @CreationTimestamp
     private Date date;
     @Column(nullable = true)
     private String destination;
